@@ -10,7 +10,7 @@ class DetailsScreen extends StatelessWidget {
 
     return Scaffold(
       body: CustomScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         slivers: [
           _CustomAppBar(),
           SliverList(
@@ -37,6 +37,12 @@ class _CustomAppBar extends StatelessWidget {
       expandedHeight: 200,
       floating: false,
       pinned: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         titlePadding: const EdgeInsets.all(0),

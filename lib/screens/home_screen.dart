@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
 
-import 'package:movies/widgets/card_swiper.dart';
-import 'package:movies/widgets/movie_slider.dart';
+import 'package:movies/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Películas en cines'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {
-              
-            }, 
-          )
-        ],
-      ),
+      appBar: const CustomAppBar(arrowBack: false, title: 'home'),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             CardSwiper(),
             MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
+            MovieSlider(),
           ],
         ),
-      )
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:movies/screens/screens.dart';
+import 'package:movies/theme/app_theme.dart';
 
 void main() => runApp(const MyApp());
 
@@ -17,13 +18,7 @@ class MyApp extends StatelessWidget {
         'home':(_) => HomeScreen(),
         'details':(_) => DetailsScreen(),
       },
-      theme: ThemeData.light().copyWith(
-        appBarTheme: const AppBarTheme(
-          color: Colors.green,
-          elevation: 0,
-          
-        )
-      ),
+      theme: AppTheme.lightTheme,
     );
   }
 }
