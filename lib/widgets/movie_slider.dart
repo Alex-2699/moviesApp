@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
+import 'package:movies/models/models.dart';
+
 class MovieSlider extends StatelessWidget {
-  Widget categoryTitle() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+  const MovieSlider({super.key, this.title, required this.movies});
+
+  final List<Movie> movies;
+  final String? title;
+
+  Widget categoryTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
-        'Populares',
-        style: TextStyle(
+        title,
+        style: const TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -14,14 +21,14 @@ class MovieSlider extends StatelessWidget {
     );
   }
 
-  Widget listItems() {
+  Widget listItems(List<Movie> movies) {
     return Expanded(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: 20,
+        itemCount: movies.length,
         itemBuilder: (_, index) {
-          return const _MoviePoster();
+          return _MoviePoster(movie: movies[index],);
         },
       ),
     );
@@ -29,15 +36,16 @@ class MovieSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 260,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          categoryTitle(),
+          if(title != null)
+            categoryTitle(title!),
           const SizedBox(height: 5),
-          listItems(),
+          listItems(movies),
         ],
       ),
     );
@@ -45,7 +53,9 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({super.key});
+  const _MoviePoster({required this.movie});
+  
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +69,9 @@ class _MoviePoster extends StatelessWidget {
             onTap: () => Navigator.pushNamed(context, 'details', arguments: 'Movie detail'),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://via.placeholder.com/300x400'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(movie.fullPosterpath),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -69,8 +79,8 @@ class _MoviePoster extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          const Text(
-            'Star Wars: El retorno del jedi para el apocalipsis',
+          Text(
+            movie.title,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
