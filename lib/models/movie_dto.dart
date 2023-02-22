@@ -33,12 +33,17 @@ class Movie {
     double voteAverage;
     int voteCount;
 
-    get fullPosterpath {
-
+    get fullPosterPath {
       if(posterPath != null) {
         return 'https://image.tmdb.org/t/p/w500$posterPath';
       }
+      return 'https://i.stack.imgur.com/GNhx0.png';
+    }
 
+    get fullBackdropPath {
+      if(posterPath != null) {
+        return 'https://image.tmdb.org/t/p/w500$backdropPath';
+      }
       return 'https://i.stack.imgur.com/GNhx0.png';
     }
 
@@ -54,7 +59,7 @@ class Movie {
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
         posterPath: json["poster_path"],
-        releaseDate: DateTime.parse(json["release_date"]),
+        releaseDate: json["release_date"] != null ? DateTime.parse(json["release_date"]) : null,
         title: json["title"],
         video: json["video"],
         voteAverage: json["vote_average"]?.toDouble(),
