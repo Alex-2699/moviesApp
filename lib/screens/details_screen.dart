@@ -25,7 +25,7 @@ class DetailsScreen extends StatelessWidget {
                 voteAverage: movie.voteAverage,
               ),
               _Overview(overview: movie.overview),
-              CastingCards(),
+              CastingCards(movieId: movie.id),
             ]),
           ),
         ],
