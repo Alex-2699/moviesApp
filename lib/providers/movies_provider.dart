@@ -23,7 +23,7 @@ class MoviesProvider extends ChangeNotifier{
   }
 
   Future<String> _getJsonData(String endPoint, {int page = 1}) async {
-    var url = Uri.https(_baseUrl, endPoint,{
+    final url = Uri.https(_baseUrl, endPoint,{
       'api_key': _apiKey, 
       'language': _language, 
       'page': '$page'
@@ -62,6 +62,19 @@ class MoviesProvider extends ChangeNotifier{
 
     return creditsResponse.cast;
 
+  }
+
+  Future<List<Movie>> searchMovies(String query)async{
+    final url = Uri.https(_baseUrl, '3/search/movie',{
+      'api_key': _apiKey, 
+      'language': _language, 
+      'query': query
+    });
+
+    final response = await http.get(url);
+    final searchResponse = SearchResponseDto.fromJson(response.body);
+
+    return searchResponse.results;
   }
 
 }

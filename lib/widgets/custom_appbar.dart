@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/search/search_delegate.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -32,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.search_rounded),
-          onPressed: () {},
+          onPressed: () => showSearch(context: context, delegate: MovieSearchDelegate()),
         )
       ],
     );

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:movies/models/models.dart';
 
 class MovieSlider extends StatefulWidget {
+  final List<Movie> movies;
+  final String? title;
+  final Function nextMovies;
+
   const MovieSlider({
     required this.movies,
     required this.nextMovies,
@@ -10,9 +14,6 @@ class MovieSlider extends StatefulWidget {
     this.title, 
   });
 
-  final List<Movie> movies;
-  final String? title;
-  final Function nextMovies;
 
   @override
   State<MovieSlider> createState() => _MovieSliderState();
@@ -54,7 +55,7 @@ class _MovieSliderState extends State<MovieSlider> {
         scrollDirection: Axis.horizontal,
         itemCount: movies.length,
         itemBuilder: (_, index) {
-          return _MoviePoster(movie: movies[index],);
+          return _MoviePoster(movie: movies[index], heroAnimationId: '${widget.title}-$index-${movies[index].id}');
         },
       ),
     );
@@ -79,12 +80,17 @@ class _MovieSliderState extends State<MovieSlider> {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({required this.movie});
-  
   final Movie movie;
+  final String heroAnimationId;
+
+  const _MoviePoster({required this.movie, required this.heroAnimationId});
+  
 
   @override
   Widget build(BuildContext context) {
+
+    movie.heroAnimationIndex = heroAnimationId;
+
     return Container(
       width: 130,
       height: 190,
@@ -92,17 +98,20 @@ class _MoviePoster extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details', arguments: movie),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(movie.fullPosterPath),
-                width: 130,
-                height: 190,
-                fit: BoxFit.cover,
+            child: Hero(
+              tag: movie.heroAnimationIndex!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.jpg'),
+                  image: NetworkImage(movie.fullPosterPath),
+                  width: 130,
+                  height: 190,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+            onTap: () => Navigator.pushNamed(context, 'details', arguments: movie),
           ),
           const SizedBox(height: 5),
           Text(

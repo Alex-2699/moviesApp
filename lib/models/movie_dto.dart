@@ -32,6 +32,7 @@ class Movie {
     bool video;
     double voteAverage;
     int voteCount;
+    String? heroAnimationIndex;
 
     get fullPosterPath {
       if(posterPath != null) {
