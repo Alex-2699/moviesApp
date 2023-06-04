@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:movies/providers/movies_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../models/models.dart';
+import 'package:movies/models/credits_response_dto.dart';
+import 'package:movies/providers/movies_provider.dart';
 
 class CastingCards extends StatelessWidget {
   final int movieId;
@@ -34,7 +33,6 @@ class CastingCards extends StatelessWidget {
           height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
             itemCount: cast.length,
             itemBuilder: (__, index) => _CastCard(
               actorsName: cast[index].name,
@@ -53,7 +51,6 @@ class _CastCard extends StatelessWidget {
   final String profileImage;
 
   const _CastCard({
-    super.key, 
     required this.actorsName, 
     required this.profileImage
   });

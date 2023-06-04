@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
       title: 'Películas App',
       initialRoute: 'home',
       routes: {
-        'home': (_) => HomeScreen(),
-        'details': (_) => DetailsScreen(),
+        'home': (_) => const HomeScreen(),
+        'details': (_) => const DetailsScreen(),
       },
       theme: AppTheme.lightTheme,
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:movies/models/models.dart';
+import 'package:movies/theme/app_theme.dart';
 
 class MovieSlider extends StatefulWidget {
   final List<Movie> movies;
@@ -13,7 +14,6 @@ class MovieSlider extends StatefulWidget {
     super.key, 
     this.title, 
   });
-
 
   @override
   State<MovieSlider> createState() => _MovieSliderState();
@@ -39,10 +39,7 @@ class _MovieSliderState extends State<MovieSlider> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+        style: AppTheme.headTitle
       ),
     );
   }
@@ -114,11 +111,13 @@ class _MoviePoster extends StatelessWidget {
             onTap: () => Navigator.pushNamed(context, 'details', arguments: movie),
           ),
           const SizedBox(height: 5),
-          Text(
-            movie.title,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          Expanded(
+            child: Text(
+              movie.title,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           )
         ],
       ),

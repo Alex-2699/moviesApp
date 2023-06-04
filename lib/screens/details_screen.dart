@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:movies/models/models.dart';
 
+import 'package:movies/models/models.dart';
+import 'package:movies/theme/app_theme.dart';
 import 'package:movies/widgets/widgets.dart';
 
 class DetailsScreen extends StatelessWidget {
+  const DetailsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
 
     return Scaffold(
+      backgroundColor: AppTheme.primary,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
         slivers: [
           _CustomAppBar(
             backdropPath: movie.fullBackdropPath,
@@ -122,27 +125,24 @@ class _PosterAndTitle extends StatelessWidget {
               children: [
                 Text(
                   movieTitle,
-                  style: textTheme.headline5,
+                  style: textTheme.headlineSmall,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
                 Text(
                   originalTitle,
-                  style: textTheme.subtitle1,
+                  style: textTheme.titleMedium,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.star_border_outlined,
-                      color: Colors.grey,
-                      size: 15,
-                    ),
+                   StarRating(vote: double.parse((voteAverage * 0.5).toStringAsFixed(1))),
                     const SizedBox(width: 5),
                     Text(
                       '$voteAverage',
-                      style: textTheme.caption,
+                      style: textTheme.bodyMedium,
                     )
                   ],
                 )
@@ -167,8 +167,40 @@ class _Overview extends StatelessWidget {
       child: Text(
         overview,
         textAlign: TextAlign.justify,
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
+    );
+  }
+}
+
+class StarRating extends StatelessWidget {
+  final double vote;
+
+  const StarRating({required this.vote, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    int wholeStars = vote.toInt();
+    double decimalPart = vote - wholeStars;
+    List<Widget> starWidgets = [];
+
+    // Agregar estrellas enteras
+    for (int i = 0; i < wholeStars; i++) {
+      starWidgets.add(const Icon(Icons.star, color: Colors.amber,));
+    }
+
+    // Agregar media estrella si corresponde
+    if (decimalPart >= 0.5) {
+      starWidgets.add(const Icon(Icons.star_half, color: Colors.amber));
+    }
+
+    // Agregar estrellas vacías restantes
+    for (int i = starWidgets.length; i < 5; i++) {
+      starWidgets.add(const Icon(Icons.star_border_rounded, color: Colors.amber));
+    }
+
+    return Row(
+      children: starWidgets,
     );
   }
 }

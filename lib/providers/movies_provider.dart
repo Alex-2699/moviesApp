@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -8,25 +7,26 @@ import 'package:movies/models/models.dart';
 
 class MoviesProvider extends ChangeNotifier{
 
-  final String _apiKey = 'e93422fe2abf7ae39c620e4a67718ee8';
+  final String _apiKey = '41837e2043d5240ff452f169c777f77d';
   final String _baseUrl = 'api.themoviedb.org';
   final String _language = 'es-ES';
 
   List<Movie> onDisplayMovies = [];
   List<Movie> popularMovies = [];
+  List<Movie> moviesByPeople = [];
   Map<int, List<Cast>> moviesCast = {};
 
   int _popularPage = 0;
 
   final debouncer = Debouncer(
-    duration: Duration(milliseconds: 500),
+    duration: const Duration(milliseconds: 500),
   );
 
-  final StreamController<List<Movie>> _suggestionStreamController = new StreamController.broadcast();
-  Stream<List<Movie>> get suggestionStream => this._suggestionStreamController.stream;
+  final StreamController<List<Movie>> _suggestionStreamController = StreamController.broadcast();
+  Stream<List<Movie>> get suggestionStream => _suggestionStreamController.stream;
 
   MoviesProvider() {
-    //print('Inicialización del provider');
+    // Inicialización del provider
     getOnDisplayMovies();
     getPopularMovies();
   }
@@ -42,6 +42,7 @@ class MoviesProvider extends ChangeNotifier{
     return response.body;
   }
 
+  // Movies
   getOnDisplayMovies() async {
     final String jsonData = await _getJsonData('3/movie/now_playing');
     final moviesNowPlaying = MoviesNowPlayingResponse.fromJson(jsonData);
@@ -60,6 +61,20 @@ class MoviesProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<List<Movie>> getMoviesByPeople(String peopleIds) async {
+    final url = Uri.https(_baseUrl, '3/discover/movie',{
+      'api_key': _apiKey, 
+      'language': _language, 
+      'with_people': peopleIds,
+      'sort_by': 'popularity.desc'
+    });
+
+    final response = await http.get(url);
+    final result = MoviesPopularResponse.fromJson(response.body);
+    return moviesByPeople = result.results;
+  }
+
+  // Cast And Persons
   Future<List<Cast>> getMovieCast(int movieId) async {
 
     if(moviesCast.containsKey(movieId)) return moviesCast[movieId]!;
@@ -73,7 +88,8 @@ class MoviesProvider extends ChangeNotifier{
 
   }
 
-  Future<List<Movie>> searchMovies(String query)async{
+  // Search
+  Future<List<Movie>> searchMovies(String query) async {
     final url = Uri.https(_baseUrl, '3/search/movie',{
       'api_key': _apiKey, 
       'language': _language, 
@@ -89,16 +105,15 @@ class MoviesProvider extends ChangeNotifier{
   void getSuggestionsByQuery(String searchTerm){
     debouncer.value = '';
     debouncer.onValue = (value) async{
-      final results = await this.searchMovies(value);
-      this._suggestionStreamController.add(results);
+      final results = await searchMovies(value);
+      _suggestionStreamController.add(results);
     };
 
-    final timer = Timer.periodic(Duration(milliseconds: 300), (_) {
+    final timer = Timer.periodic(const Duration(milliseconds: 300), (_) {
       debouncer.value = searchTerm;
     });
 
-    Future.delayed(Duration(milliseconds: 301)).then((_) => timer.cancel());
-
+    Future.delayed(const Duration(milliseconds: 301)).then((_) => timer.cancel());
   }
 
 }

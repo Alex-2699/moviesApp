@@ -81,6 +81,7 @@ class Cast {
     );
 }
 
+// ignore: constant_identifier_names
 enum Department { ACTING, PRODUCTION, SOUND, EDITING, CREW, CAMERA, WRITING, DIRECTING, COSTUME_MAKE_UP, ART, VISUAL_EFFECTS, LIGHTING }
 
 final departmentValues = EnumValues({
